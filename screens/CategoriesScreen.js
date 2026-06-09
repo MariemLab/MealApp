@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useLayoutEffect} from "react";
 import {
   View,
   Text,
@@ -7,13 +7,25 @@ import {
   Pressable,
   ActivityIndicator,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 
+import { Ionicons } from "@expo/vector-icons";
 import { getCategories } from "../api/themealdb";
 
 export default function CategoriesScreen({ navigation }) {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+          <Ionicons name="search" size={24} color="black" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   useEffect(() => {
     loadCategories();

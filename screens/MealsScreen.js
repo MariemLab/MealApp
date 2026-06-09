@@ -17,8 +17,6 @@ export default function MealsScreen({ route, navigation }) {
 
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filtered, setFiltered] = useState([]);
-  const [search, setSearch] = useState("");
 
   
   useEffect(() => {
@@ -29,21 +27,10 @@ export default function MealsScreen({ route, navigation }) {
     try {
       const data = await getMealsByCategory(category);
       setMeals(data);
-      setFiltered(data);
     } catch (error) {
       console.log("Erreur repas :", error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleSearch = (text) => {
-    setSearch(text);
-    if (!text.trim()) {
-      setFiltered(meals);
-    } else {
-      const lower = text.toLowerCase();
-      setFiltered(meals.filter((m) => m.strMeal.toLowerCase().includes(lower)));
     }
   };
 
@@ -54,14 +41,9 @@ export default function MealsScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Plats de la catégorie: {category}</Text>
-      <TextInput
-          style={styles.searchInput}
-          placeholder="Rechercher une recette..."
-          value={search}
-          onChangeText={handleSearch}
-        />
+      
       <FlatList
-        data={filtered}
+        data={meals}
         numColumns={2}
         columnWrapperStyle={styles.row}
         keyExtractor={(item) => item.idMeal}
@@ -117,14 +99,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "500",
   },
-  
-  searchInput: {
-  backgroundColor: "white",
-  padding: 12,
-  borderRadius: 12,
-  borderWidth: 1,
-  borderColor: "#ddd",
-  marginBottom: 15,
-  fontSize: 15,
-},
+
 });
